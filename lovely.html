@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>for you ❤️</title>
+    <style>
+        body {
+            font-family: 'Tahoma', 'Cairo', sans-serif;
+            background: #121212; /* خلفية سوداء مطفية فخمة */
+            margin: 0;
+            text-align: center;
+            overflow-x: hidden;
+            color: #d4af37; /* اللون الذهبي الملكي */
+        }
+
+        /* شاشة البداية */
+        #startScreen {
+            position: fixed;
+            width: 100%; height: 100%;
+            background: #000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 1000;
+            transition: 1.5s;
+        }
+        #startScreen h1 { font-size: 2.2em; margin-bottom: 30px; color: #d4af37; text-shadow: 0 0 10px rgba(212,175,55,0.3); }
+        #startScreen button {
+            padding: 15px 50px; font-size: 20px; border: 1px solid #d4af37; border-radius: 50px;
+            background: transparent; color: #d4af37; cursor: pointer;
+            transition: 0.4s; box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+        #startScreen button:hover { background: #d4af37; color: #000; box-shadow: 0 0 30px rgba(212, 175, 55, 0.4); }
+
+        /* تأثير القلوب */
+        .heart { position: fixed; bottom: -50px; animation: floatUp 6s linear infinite; z-index: 1; opacity: 0.8; }
+        @keyframes floatUp { to { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
+
+        h1.main-title { margin-top: 60px; font-size: 2.5em; letter-spacing: 2px; }
+
+        /* الجاليري والظروف */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 25px; padding: 40px 10%;
+        }
+
+        .envelope {
+            width: 130px; height: 90px; margin: auto; position: relative; cursor: pointer;
+            perspective: 1000px; transition: 0.3s;
+        }
+        .envelope:hover { transform: translateY(-5px); }
+        
+        .flap {
+            position: absolute; width: 100%; height: 50%;
+            background: #2a2a2a; top: 0; left: 0;
+            transform-origin: top; transition: 0.6s; z-index: 3;
+            border: 1px solid #333; clip-path: polygon(0 0, 100% 0, 50% 100%);
+        }
+        .env-body {
+            position: absolute; width: 100%; height: 100%;
+            background: #1e1e1e; bottom: 0; z-index: 1; border-radius: 2px;
+            border: 1px solid #333; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .paper {
+            position: absolute; bottom: 5px; width: 90%; left: 5%; height: 0;
+            background: #fff; border-radius: 2px; overflow: hidden;
+            transition: 0.6s; z-index: 2;
+        }
+        .paper img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+
+        .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
+        .envelope.open .paper { height: 130px; bottom: 60px; }
+
+        /* عرض الصورة الكبيرة */
+        .fullscreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); display: flex; justify-content: center;
+            align-items: center; z-index: 2000; cursor: zoom-out;
+        }
+        .fullscreen img {
+            max-width: 90%; max-height: 85%; border: 2px solid #d4af37;
+            border-radius: 8px; box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+        }
+
+        /* رسالة الحب الكبيرة */
+        .modal {
+            display: none; position: fixed; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.96); top: 0; left: 0; z-index: 3000;
+            overflow-y: auto; padding: 20px 0;
+        }
+        .modal-content {
+            color: #d4af37;
+            font-size: 26px;
+            padding: 60px 40px;
+            text-align: right;
+            line-height: 1.8;
+            max-width: 850px;
+            margin: 40px auto;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: #0a0a0a;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(0,0,0,1);
+            position: relative;
+        }
+        .close-btn {
+            position: sticky; top: 10px; float: left; margin-left: 20px;
+            color: #fff; font-size: 45px; cursor: pointer; z-index: 3001;
+        }
+
+        .main-env-label { margin-top: 60px; font-size: 1.2em; color: #fff; opacity: 0.8; }
+        
+        .countdown-container {
+            margin: 50px 0; padding: 30px;
+            border-top: 1px solid #333;
+        }
+        .countdown-text { font-size: 24px; letter-spacing: 1px; }
+
+        /* موبايل فرييندلي */
+        @media (max-width: 600px) {
+            .modal-content { font-size: 20px; padding: 40px 20px; margin: 20px; }
+            h1.main-title { font-size: 1.8em; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="startScreen">
+    <h1>💌 يارب تعجبك</h1>
+    <button onclick="startSite()">افتحي الهدية</button>
+</div>
+
+<audio id="bgMusic" loop><source src="hob_el_omr.mp3"></audio>
+<audio id="openSound"><source src="open.mp3"></audio>
+
+<h1 class="main-title">to my secret  ❤️</h1>
+
+<div class="gallery" id="gallery"></div>
+
+<div class="main-env-container">
+    <p class="main-env-label">الجواب ده فيه كل الكلام اللي في قلبي 👇</p>
+    <div class="envelope" onclick="openMessage(this)" style="width: 200px; height: 130px; margin-bottom: 20px;">
+        <div class="flap" style="background: #d4af37; clip-path: none; height: 8px; top: -8px;"></div>
+        <div class="env-body" style="background: #d4af37;"></div>
+        <div class="paper"></div>
+    </div>
+</div>
+
+<div class="modal" id="messageModal">
+    <span class="close-btn" onclick="document.getElementById('messageModal').style.display='none'">&times;</span>
+    <div class="modal-content" id="typedText"></div>
+</div>
+
+<div class="countdown-container">
+    <div class="countdown-text" id="countdown"></div>
+</div>
+
+<script>
+    function startSite(){
+        document.getElementById('startScreen').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('bgMusic').play();
+            createHearts();
+        }, 1000);
+    }
+
+    function createHearts() {
+        setInterval(() => {
+            let h = document.createElement('div');
+            h.className = 'heart'; h.innerHTML = '❤️';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 6000);
+        }, 400);
+    }
+
+    const gallery = document.getElementById('gallery');
+    for(let i=1; i<=10; i++){
+        gallery.innerHTML += `
+        <div class="envelope" onclick="openEnvelope(this, 'pic${i}.jpeg')">
+            <div class="flap"></div>
+            <div class="paper"><img src="pic${i}.jpeg"></div>
+            <div class="env-body"></div>
+        </div>`;
+    }
+
+    function openEnvelope(el, src){
+        if(el.classList.contains('open')) return;
+        el.classList.add('open');
+        document.getElementById('openSound').play();
+        setTimeout(() => {
+            let fs = document.createElement('div');
+            fs.className = 'fullscreen';
+            fs.innerHTML = `<img src='${src}'>`;
+            fs.onclick = () => { fs.remove(); el.classList.remove('open'); };
+            document.body.appendChild(fs);
+        }, 800);
+    }
+
+    function openMessage(el){
+        el.classList.add('open');
+        document.getElementById('openSound').play();
+        
+        // رسالتك اللي طلبتها بالظبط
+        let text = "من أول مرة شوفتك فيها… وأنا حسيت إن في حاجة مختلفة، حاجة مش شبه أي حد قبل كده ❤️\n\nوفجأة بقيتي جزء من يومي… من تفكيري… من كل تفصيلة صغيرة بحس بيها.\n\nحتى الحاجات اللي كنت بعملها لوحدي، بقيت أتمنى أعملها معاكي.\n\nعارفة إيه أكتر حاجة بحبها فيكي؟\n\nإنك على طول بتبقي نفسك… بعفويتك، بضحكتك، بطريقة كلامك اللي أوقات بتضحكني حتى لو أنا متضايق 😅\n\n(آه والله… حتى لما بنتخانق 😄)\n\nبقيت لما أزعل، أول حد ييجي في بالي هو انتي\n\nولما أفرح… أول حد عايز أشاركه الفرحة هو برضه انتي\n\nباختصار… بقيتي 'الشخص بتاعي' ❤️\n\nأنا مش مثالي… وأكيد هتخانق وهضايقك أوقات\n\nبس أوعدك بحاجة واحدة بس:\n\nعمري ما هبطل أحبك، ولا هبطل أحاول أبقى أحسن علشانك ❤️\n\nوبالمناسبة…\n\nلو في يوم زعلنا من بعض (وده أكيد هيحصل 😄)\n\nافتكري بس إن أنا أكتر واحد بيحبك، حتى لو شكلي وقتها مش لطيف خالص 😅\n\nأنا بحبك مش بس علشان انتي جميلة…\n\nأنا بحبك علشان ريّحتي قلبي، وخلتيني أحس إن ليا مكان في الدنيا دي ليه معنى ❤️\n\nومستني اليوم اللي تبقي فيه مش بس حبيبتي…\n\nلا… تبقي مراتي، وصاحبتي، وكل حاجة حلوة في حياتي 💍\n\nويوم 16 أكتوبر مش مجرد تاريخ…\n\nده اليوم اللي هبدأ فيه أحلى قصة في حياتي… معاكي انتي ❤️\n\nبحبك جدًا… أكتر ما تتخيلي، وأكتر ما بعرف أقول\n\n(بس بحاول أهو 😄)\n\nمحمد صابر ✍️";
+
+        setTimeout(() => {
+            document.getElementById('messageModal').style.display = 'block';
+            typeWriter(text);
+        }, 700);
+    }
+
+    function typeWriter(text){
+        let i = 0; let target = document.getElementById('typedText');
+        target.innerHTML = '';
+        function typing(){
+            if(i < text.length){
+                target.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
+                i++; setTimeout(typing, 50);
+            }
+        }
+        typing();
+    }
+
+    const weddingDate = new Date("Oct 16, 2026 00:00:00").getTime();
+    setInterval(() => {
+        let now = new Date().getTime();
+        let d = weddingDate - now;
+        let days = Math.floor(d / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById('countdown').innerHTML = `فاضل على فرحنا ان شاء الله ${days} يوم و ${hours} ساعة ❤️`;
+    }, 1000);
+</script>
+
+</body>
+</html>
